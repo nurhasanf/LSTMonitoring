@@ -1,0 +1,6 @@
+altair==4.2.0
+earthengine_api==0.1.334
+ee==0.4
+geemap==0.19.0
+pandas==1.5.2
+streamlit==1.15.2
