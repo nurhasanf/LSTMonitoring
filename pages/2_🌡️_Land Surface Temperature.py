@@ -230,78 +230,84 @@ def result(latitude, longitude, site, site_buffer):
 
                 st.subheader('Line Chart')
 
-                # Create a selection that chooses the nearest point & selects based on x-value
-                hover = alt.selection_single(
-                    fields=['Date'],
-                    nearest=True,
-                    on="mouseover",
-                    empty="none",
-                )
+                T1,T2,T3,T4,T5 = st.tabs(['All','LOESS','By Year','By Quarter','By Month'])
 
-                lines = alt.Chart(df).mark_line(point='transparent').encode(
-                    alt.X('Date'),
-                    y='LST'
-                )
-
-                # Draw points on the line, highlight based on selection, color based on delta
-                points = (
-                    lines.transform_filter(hover)
-                    .mark_circle(size=65)
-                    .encode(color=alt.Color("color:N", scale=None))
-                ).transform_calculate(color='datum.delta < 0 ? "red" : "green"')
-
-                # Draw an invisible rule at the location of the selection
-                tooltips = (
-                    alt.Chart(df)
-                    .mark_rule(opacity=0)
-                    .encode(
-                        x='Date',
-                        y='LST',
-                        tooltip=['Date', 'LST', "delta"],
+                with T1:
+                    # Create a selection that chooses the nearest point & selects based on x-value
+                    hover = alt.selection_single(
+                        fields=['Date'],
+                        nearest=True,
+                        on="mouseover",
+                        empty="none",
                     )
-                    .add_selection(hover)
-                )
 
-                line_chart = alt.layer(lines, points, tooltips)
-                st.altair_chart(line_chart, use_container_width=True)
+                    lines = alt.Chart(df).mark_line(point='transparent').encode(
+                        alt.X('Date'),
+                        y='LST'
+                    )
 
+                    # Draw points on the line, highlight based on selection, color based on delta
+                    points = (
+                        lines.transform_filter(hover)
+                        .mark_circle(size=65)
+                        .encode(color=alt.Color("color:N", scale=None))
+                    ).transform_calculate(color='datum.delta < 0 ? "red" : "green"')
 
-                chart = alt.Chart(df).mark_point().encode(
-                    x='Date:T',
-                    y='LST:Q'
-                )
-                chart_loess = chart + chart.transform_loess('Date', 'LST').mark_line()
-                st.altair_chart(chart_loess, use_container_width=True)
+                    # Draw an invisible rule at the location of the selection
+                    tooltips = (
+                        alt.Chart(df)
+                        .mark_rule(opacity=0)
+                        .encode(
+                            x='Date',
+                            y='LST',
+                            tooltip=['Date', 'LST', "delta"],
+                        )
+                        .add_selection(hover)
+                    )
 
-                byYear = alt.Chart(df).mark_line(point=True).encode(
-                    alt.X('year(Date):T'),
-                    alt.Y('mean(LST):Q'),
-                    tooltip=[
-                        alt.Tooltip('Date', timeUnit='year'),
-                        alt.Tooltip('LST', aggregate='mean')
-                    ]
-                )
-                st.altair_chart(byYear, use_container_width=True)
+                    line_chart = alt.layer(lines, points, tooltips)
+                    st.altair_chart(line_chart, use_container_width=True)
 
-                byQuarter = alt.Chart(df).mark_line(point=True).encode(
-                    alt.X('quarter(Date):T'),
-                    alt.Y('mean(LST):Q'),
-                    tooltip=[
-                        alt.Tooltip('Date', timeUnit='quarter'),
-                        alt.Tooltip('LST', aggregate='mean')
-                    ]
-                )
-                st.altair_chart(byQuarter, use_container_width=True)
+                with T2:
+                    chart = alt.Chart(df).mark_point().encode(
+                        x='Date:T',
+                        y='LST:Q'
+                    )
+                    chart_loess = chart + chart.transform_loess('Date', 'LST').mark_line()
+                    st.altair_chart(chart_loess, use_container_width=True)
 
-                byMonth = alt.Chart(df).mark_line(point=True).encode(
-                    alt.X('month(Date):T'),
-                    alt.Y('mean(LST):Q'),
-                    tooltip=[
-                        alt.Tooltip('Date', timeUnit='month'),
-                        alt.Tooltip('LST', aggregate='mean')
-                    ]
-                )
-                st.altair_chart(byMonth, use_container_width=True)
+                with T3:
+                    byYear = alt.Chart(df).mark_line(point=True).encode(
+                        alt.X('year(Date):T'),
+                        alt.Y('mean(LST):Q'),
+                        tooltip=[
+                            alt.Tooltip('Date', timeUnit='year'),
+                            alt.Tooltip('LST', aggregate='mean')
+                        ]
+                    )
+                    st.altair_chart(byYear, use_container_width=True)
+                
+                with T4:
+                    byQuarter = alt.Chart(df).mark_line(point=True).encode(
+                        alt.X('quarter(Date):T'),
+                        alt.Y('mean(LST):Q'),
+                        tooltip=[
+                            alt.Tooltip('Date', timeUnit='quarter'),
+                            alt.Tooltip('LST', aggregate='mean')
+                        ]
+                    )
+                    st.altair_chart(byQuarter, use_container_width=True)
+
+                with T5:
+                    byMonth = alt.Chart(df).mark_line(point=True).encode(
+                        alt.X('month(Date):T'),
+                        alt.Y('mean(LST):Q'),
+                        tooltip=[
+                            alt.Tooltip('Date', timeUnit='month'),
+                            alt.Tooltip('LST', aggregate='mean')
+                        ]
+                    )
+                    st.altair_chart(byMonth, use_container_width=True)
 
                 st.subheader('Histogram')
                 histogram = alt.Chart(df).mark_bar().encode(
@@ -329,8 +335,7 @@ def result(latitude, longitude, site, site_buffer):
                     alt.Tooltip('Month')
                         
                     ]
-                ).properties(width=300
-                )
+                ).properties(height=400)
                 st.altair_chart(heatplot, use_container_width=True)
 
 input_data()
