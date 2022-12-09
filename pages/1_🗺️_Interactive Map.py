@@ -95,7 +95,7 @@ if submit or st.session_state['pass']:
             # Band Ratio
             ratio_container = st.container()
             ratio_all = st.checkbox('All band')
-            ratio_options = ['NDVI','NDBI','NDWI']
+            ratio_options = ['NDVI','NDBI','NDWI','LST']
 
             if ratio_all:
                 ratio_container.multiselect(
@@ -144,6 +144,8 @@ if submit or st.session_state['pass']:
             band_ratio.append('NDBI')
         elif item == 'NDWI':
             band_ratio.append('NDWI')
+        elif item == 'LST':
+            band_ratio.append('LST')
 
     Map = geemap.Map(
         # location=[latitude, longitude],
@@ -178,6 +180,8 @@ if submit or st.session_state['pass']:
                 Map.addLayer(data, {'min':-1, 'max':1, 'bands':item}, item, True)
             elif item == 'NDBI':
                 Map.addLayer(data, {'min':-1, 'max':1, 'bands':item}, item, True)
+            elif item == 'LST':
+                Map.addLayer(data, {'min':20, 'max':40, 'bands':item, 'palette':['blue', 'cyan', 'green', 'yellow', 'red']}, item, True)
 
         Map.centerObject(ee.Geometry.Point([longitude, latitude]), zoom=11)
         Map.to_streamlit(height=480)

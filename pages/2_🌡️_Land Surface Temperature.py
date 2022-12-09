@@ -158,9 +158,9 @@ def result(latitude, longitude, site, site_buffer):
                     'region': roi,
                     'framesPerSecond': 2,
                     'crs': 'EPSG:3857',
-                    'min': 25,
-                    'max': 45,
-                    'palette': ['blue', 'yellow', 'red']
+                    'min': 20,
+                    'max': 40,
+                    'palette': ['blue', 'cyan', 'green', 'yellow', 'red']
                 }
 
                 geemap.download_ee_video(reduce_yearly, videoArgs, 'Data/Pictures/lst.gif')
