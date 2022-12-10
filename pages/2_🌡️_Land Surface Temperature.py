@@ -12,7 +12,8 @@ st.set_page_config(
 )
 
 st.header('🌡️ Land Surface Temperature')
-st.expander('Show Demo').write('Lorem Ipsum')
+with st.expander('Show Demo'):
+    st.image('Data/Pictures/Demo/LandSurfaceTemperature_demo.gif', use_column_width=True)
 
 def input_data():
   

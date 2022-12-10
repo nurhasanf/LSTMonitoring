@@ -40,7 +40,7 @@ def load_dataset(latitude, longitude, cloudmask):
     return dataset
 
 with st.expander('Show Demo'):
-    st.write('`Lorem ipsum`')
+    st.image('Data/Pictures/Demo/InteractiveMap_demo.gif', use_column_width=True)
 
 if 'pass' not in st.session_state:
     st.session_state['pass'] = False
