@@ -117,7 +117,7 @@ def result(latitude, longitude, site, site_buffer):
 
                 return df
         
-            with st.expander('Show Gift Animation'):
+            with st.expander('Show Gift Animation', expanded=True):
 
                 LSTParams = {'min': 17 , 'max': 45, 'palette': ['blue', 'yellow','red']}
 
@@ -150,9 +150,9 @@ def result(latitude, longitude, site, site_buffer):
 
                     return filtered
 
+                # Membuat gif lst tahunan
                 years = ee.List.sequence(2013,2022)
                 reduce_yearly = ee.ImageCollection(years.map(reducebyYear))
-
                 videoArgs = {
                     'dimensions': 450,
                     'region': roi,
@@ -162,11 +162,10 @@ def result(latitude, longitude, site, site_buffer):
                     'max': 40,
                     'palette': ['blue', 'cyan', 'green', 'yellow', 'red']
                 }
-
                 geemap.download_ee_video(reduce_yearly, videoArgs, 'Data/Pictures/lst.gif')
 
-                text = list(range(2013,2023))
-                
+                # Menambahkan text tahun pada gambar
+                text = list(range(2013,2023))               
                 geemap.add_text_to_gif(
                     'Data/Pictures/lst.gif',
                     'Data/Pictures/lst.gif',
@@ -178,10 +177,32 @@ def result(latitude, longitude, site, site_buffer):
                     add_progress_bar=False
                 ) 
 
+                # Menambahkan colorbar pada gambar
+                colorbar_v = geemap.create_colorbar(
+                    width=250,
+                    height=40,
+                    palette=['blue', 'cyan', 'green', 'yellow', 'red'],
+                    vertical=True,
+                    add_labels=True,
+                    font_size=15,
+                    labels=[20, 40],
+                    add_outline=False,
+                    out_file='Data/Pictures/colorbar/colorbar.png',
+                    font_color='white'
+                )
+
+                geemap.add_image_to_gif(
+                    in_gif='Data/Pictures/lst.gif',
+                    out_gif='Data/Pictures/lst.gif',
+                    in_image='Data/Pictures/colorbar/colorbar.png',
+                    xy=('80%', '65%'),
+                    image_size=(150, 150)
+                )
+
                 cols = st.columns(3)
                 cols[1].image('Data/Pictures/lst.gif', use_column_width='auto')
  
-            with st.expander('Show LST Images by Yearly'):
+            with st.expander('Show LST Images by Yearly', expanded=True):
 
                 geemap.gif_to_png('Data/Pictures/lst.gif', 'Data/Pictures/YearlyLST/')
 
@@ -201,7 +222,7 @@ def result(latitude, longitude, site, site_buffer):
                 c2.image('Data/Pictures/YearlyLST/10.png', caption='median LST 2022', use_column_width=True)
 
 
-            with st.expander('Show Data'):
+            with st.expander('Show Data', expanded=True):
                 df = load_dataframe()
                 df = df.dropna()
                 df['delta'] = df.LST.diff().fillna(0)
@@ -226,7 +247,7 @@ def result(latitude, longitude, site, site_buffer):
                     mime='text/csv',
                 )
 
-            with st.expander('Show Chart'):
+            with st.expander('Show Chart', expanded=True):
 
                 st.subheader('Line Chart')
 
