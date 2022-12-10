@@ -32,9 +32,11 @@ def input_data():
     with st.expander('Determine of Sample Point', expanded=True):
 
         with st.form('Form-1'):
-            st.text_input('Latitude', value=-6.737246, key='latitude')
-            st.text_input('Longitude', value=108.550659, key='longitude')
-            submit = st.form_submit_button("Submit")
+            kol1,kol2,kol3 = st.columns(3)
+            kol1.text_input('Latitude', value=-6.737246, key='latitude')
+            kol2.text_input('Longitude', value=108.550659, key='longitude')
+            # kol3.subheader('')
+            kol1.form_submit_button("Submit")
 
         global latitude, longitude, site, site_buffer
 
