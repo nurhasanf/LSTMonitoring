@@ -74,7 +74,7 @@ if submit or st.session_state['pass']:
             st.markdown(' ')  
             # Composite Band
             composite_container = st.container()
-            composite_all = st.checkbox('All composite')
+            composite_all = st.checkbox('All composites')
             composite_options = ['True Color', 'False Color', 'Color Infrared',
                                 'Agriculture', 'Atmospheric Penetration', 'Healthly Vegetation',
                                 'Land/Water', 'Natural with Atmospheric Removal', 'Shortwave Infrared',
@@ -92,23 +92,26 @@ if submit or st.session_state['pass']:
                             label = 'Band Composite',
                             options = composite_options,
                             key = 'band_composite')
-            # Band Ratio
-            ratio_container = st.container()
-            ratio_all = st.checkbox('All band')
-            ratio_options = ['NDVI','NDBI','NDWI','LST']
+            # List of bands
+            bandlist_container = st.container()
+            bandlist_all = st.checkbox('All bands')
+            bandlist_options = ['B1','B2','B3','B4',
+                                'B5','B6','B7',
+                                'NDVI','NDBI','NDWI','LST'
+                                ]
 
-            if ratio_all:
-                ratio_container.multiselect(
-                            label = 'Band Ratio', 
-                            options = ratio_options, 
-                            default = ratio_options, 
-                            key = 'band_ratio')
+            if bandlist_all:
+                bandlist_container.multiselect(
+                            label = 'List of bands', 
+                            options = bandlist_options, 
+                            default = bandlist_options, 
+                            key = 'band_list')
 
             else:
-                ratio_container.multiselect(
-                            label = 'Band Ratio', 
-                            options = ratio_options, 
-                            key = 'band_ratio')
+                bandlist_container.multiselect(
+                            label = 'List of bands', 
+                            options = bandlist_options, 
+                            key = 'band_list')
 
     composite = st.session_state['band_composite']
     bands = []
@@ -135,17 +138,32 @@ if submit or st.session_state['pass']:
         elif item == 'Vegetation Analysis':
             bands.append({'Vegetation Analysis':['SR_B6','SR_B5','SR_B4']})
 
-    ratio = st.session_state['band_ratio']
-    band_ratio = []
+    ratio = st.session_state['band_list']
+    band_list = []
     for item in ratio:
-        if item == 'NDVI':
-            band_ratio.append('NDVI')
+        if item == 'B1':
+            band_list.append('SR_B1')
+        elif item == 'B2':
+            band_list.append('SR_B2')
+        elif item == 'B3':
+            band_list.append('SR_B3')
+        elif item == 'B4':
+            band_list.append('SR_B4')
+        elif item == 'B5':
+            band_list.append('SR_B5')
+        elif item == 'B6':
+            band_list.append('SR_B6')
+        elif item == 'B7':
+            band_list.append('SR_B7')
+
+        elif item == 'NDVI':
+            band_list.append('NDVI')
         elif item == 'NDWI':
-            band_ratio.append('NDBI')
+            band_list.append('NDBI')
         elif item == 'NDWI':
-            band_ratio.append('NDWI')
+            band_list.append('NDWI')
         elif item == 'LST':
-            band_ratio.append('LST')
+            band_list.append('LST')
 
     Map = geemap.Map(
         # location=[latitude, longitude],
@@ -160,7 +178,7 @@ if submit or st.session_state['pass']:
     scene = st.session_state['scene_id']
 
     @st.experimental_memo(show_spinner=False)
-    def layer(latitude, longitude, basemap, scene, bands, cloudmask, band_ratio):
+    def layer(latitude, longitude, basemap, scene, bands, cloudmask, band_list):
 
         data = load_dataset(latitude, longitude, cloudmask).filter(ee.Filter.eq('system:index', scene)) \
                     .first()
@@ -173,8 +191,23 @@ if submit or st.session_state['pass']:
             for key,value in dict.items():
                 Map.addLayer(data, {'min':0,'max':0.3,'bands':value}, key, True)
 
-        for item in band_ratio:
-            if item == 'NDVI':
+        for item in band_list:
+            if item == 'SR_B1':
+                Map.addLayer(data, {'min':0,'max':0.3,'bands':item}, item, True)
+            elif item == 'SR_B2':
+                Map.addLayer(data, {'min':0,'max':0.3,'bands':item}, item, True)
+            elif item == 'SR_B3':
+                Map.addLayer(data, {'min':0,'max':0.3,'bands':item}, item, True)
+            elif item == 'SR_B4':
+                Map.addLayer(data, {'min':0,'max':0.3,'bands':item}, item, True)
+            elif item == 'SR_B5':
+                Map.addLayer(data, {'min':0,'max':0.3,'bands':item}, item, True)
+            elif item == 'SR_B6':
+                Map.addLayer(data, {'min':0,'max':0.3,'bands':item}, item, True)
+            elif item == 'SR_B7':
+                Map.addLayer(data, {'min':0,'max':0.3,'bands':item}, item, True)
+
+            elif item == 'NDVI':
                 vizparams = {
                     'min':-1, 
                     'max':1, 
@@ -221,7 +254,7 @@ if submit or st.session_state['pass']:
         scene=st.session_state.scene_id,
         bands=bands,
         cloudmask=st.session_state.mask,
-        band_ratio=band_ratio
+        band_list=band_list
 
     )
 
