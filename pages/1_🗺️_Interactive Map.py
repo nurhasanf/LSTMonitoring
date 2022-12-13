@@ -175,13 +175,40 @@ if submit or st.session_state['pass']:
 
         for item in band_ratio:
             if item == 'NDVI':
-                Map.addLayer(data, {'min':-1, 'max':1, 'bands':item, 'palette': ['blue', 'white', 'green']}, item, True)
+                vizparams = {
+                    'min':-1, 
+                    'max':1, 
+                    'bands':item, 
+                    'palette': ['blue', 'white', 'green']
+                    }
+                Map.addLayer(data, vizparams, item, True)
+                Map.add_colorbar(vizparams, label='NDVI')
+
             elif item == 'NDWI':
-                Map.addLayer(data, {'min':-1, 'max':1, 'bands':item}, item, True)
+                vizparams = {
+                    'min':-1, 
+                    'max':1, 
+                    'bands':item
+                    }
+                Map.addLayer(data, vizparams, item, True)
+
             elif item == 'NDBI':
-                Map.addLayer(data, {'min':-1, 'max':1, 'bands':item}, item, True)
+                vizparams = {
+                    'min':-1, 
+                    'max':1, 
+                    'bands':item
+                    }
+                Map.addLayer(data, vizparams, item, True)
+
             elif item == 'LST':
-                Map.addLayer(data, {'min':20, 'max':40, 'bands':item, 'palette':['blue', 'cyan', 'green', 'yellow', 'red']}, item, True)
+                vizparams = {
+                    'min':20, 
+                    'max':40, 
+                    'bands':item, 
+                    'palette':['blue', 'cyan', 'green', 'yellow', 'red']
+                    }
+                Map.addLayer(data, vizparams, item, True)
+                Map.add_colorbar(vizparams, label='LST')
 
         Map.centerObject(ee.Geometry.Point([longitude, latitude]), zoom=11)
         Map.to_streamlit(height=480)
