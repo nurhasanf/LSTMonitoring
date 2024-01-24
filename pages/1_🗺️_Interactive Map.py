@@ -134,7 +134,7 @@ if submit or st.session_state['pass']:
         elif item == 'Natural with Atmospheric Removal':
             bands.append({'Natural with Atmospheric Removal':['SR_B7','SR_B5','SR_B3']})
         elif item == 'Shortwave Infrared':
-            bands.append({'Shortwave Infrared':['SR_B7','SR_B5','SR_B4']})
+            bands.append({'Shortwave Infrared':['SR_B7','SR_B5','SR_B3']})
         elif item == 'Vegetation Analysis':
             bands.append({'Vegetation Analysis':['SR_B6','SR_B5','SR_B4']})
 
